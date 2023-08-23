@@ -99,32 +99,53 @@ main {
   padding: 15px;
 }
 
+:root {
+  --violet: #8b00ff;
+  --green: #84cd1b;
+  --carmazin: #dc143c;
+  --yellow: #ffd800;
+  --lightbrown: #cd853f;
+}
+
 .fruit__item {
   margin: 10px;
   padding: 10px;
   width: fit-content;
   height: 100px;
   border-radius: 10px;
+  border: 5px solid transparent;
+  position: relative;
 }
 
-.fruit_violet {
-  background: #8b00ff;
+
+.fruit__item.fruit_violet {
+  border-color: var(--violet);
+  border-style: solid;
 }
 
-.fruit_green {
-  background: #84cd1b;
+.fruit__item.fruit_green {
+  border-color: var(--green);
+  border-style: solid;
 }
 
-.fruit_carmazin {
-  background: #dc143c;
+.fruit__item.fruit_carmazin {
+  border-color: var(--carmazin);
+  border-style: solid;
 }
 
-.fruit_yellow {
-  background: #ffd800;
+.fruit__item.fruit_yellow {
+  border-color: var(--yellow);
+  border-style: solid;
 }
 
-.fruit_lightbrown {
-  background: #cd853f;
+.fruit__item.fruit_lightbrown {
+  border-color: var(--lightbrown);
+  border-style: solid;
+}
+
+.fruit__item.fruit_black {
+  border-color: black;
+  border-style: solid;
 }
 
 .fruit__info {

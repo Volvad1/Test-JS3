@@ -9,6 +9,16 @@ const kindInput = document.querySelector('.kind__input');
 const colorInput = document.querySelector('.color__input');
 const weightInput = document.querySelector('.weight__input');
 const addActionButton = document.querySelector('.add__action__btn');
+const minWeightInput = document.querySelector('.minweight__input');
+const maxWeightInput = document.querySelector('.maxweight__input');
+
+const colorTranslations = {
+  'фиолетовый': 'violet',
+  'зеленый': 'green',
+  'розово-красный': 'carmazin',
+  'желтый': 'yellow',
+  'светло-коричневый': 'lightbrown'
+};
 
 let fruitsJSON = `[{"kind": "Мангустин", "color": "фиолетовый", "weight": 13},{"kind": "Дуриан", "color": "зеленый", "weight": 35},{"kind": "Личи", "color": "розово-красный", "weight": 17},{"kind": "Карамбола", "color": "желтый", "weight": 28},{"kind": "Тамаринд", "color": "светло-коричневый", "weight": 22}]`;
 
@@ -22,20 +32,46 @@ const displayFruits = () => {
   fruitsList.innerHTML = '';
 
   fruits.forEach((fruit, i) => {
-    const colorClass = `fruit_${fruit.color.toLowerCase()}`;
     const li = document.createElement('li');
-    li.classList.add('fruit__item', colorClass);
-    li.innerHTML = `
-      <div class="fruit__info">
-        <div>index: ${i}</div>
-        <div>kind: ${fruit.kind}</div>
-        <div>color: ${fruit.color}</div>
-        <div>weight (кг): ${fruit.weight}</div>
-      </div>
-    `;
+    li.classList.add('fruit__item', `fruit_${colorTranslations[fruit.color].toLowerCase()}`);
+
+    const div = document.createElement('div');
+    div.classList.add('fruit__info');
+
+    const indexDiv = document.createElement('div');
+    indexDiv.textContent = `index: ${i}`;
+    const kindDiv = document.createElement('div');
+    kindDiv.textContent = `kind: ${fruit.kind}`;
+    const colorDiv = document.createElement('div');
+    colorDiv.textContent = `color: ${fruit.color}`;
+    const weightDiv = document.createElement('div');
+    weightDiv.textContent = `weight (кг): ${fruit.weight}`;
+
+    div.appendChild(indexDiv);
+    div.appendChild(kindDiv);
+    div.appendChild(colorDiv);
+    div.appendChild(weightDiv);
+
+    li.appendChild(div);
     fruitsList.appendChild(li);
   });
+
+  updateFruitBorders();
 };
+
+const updateFruitBorders = () => {
+  const fruitItems = document.querySelectorAll('.fruit__item');
+
+  fruitItems.forEach(item => {
+    const colorClass = [...item.classList].find(cls => cls.startsWith('fruit_'));
+    const computedStyle = getComputedStyle(document.documentElement);
+    const borderColorVar = `--${colorTranslations[colorClass.replace('fruit_', '')]}`; // Правильное получение имени цвета
+    item.style.borderColor = computedStyle.getPropertyValue(borderColorVar);
+    item.style.borderStyle = 'solid';
+  });
+};
+
+displayFruits();
 
 const getRandomInt = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -54,15 +90,6 @@ const shuffleFruits = () => {
   displayFruits(); 
 };
 
-const updateFruitBorders = () => {
-  const fruitItems = document.querySelectorAll('.fruit__item');
-
-  fruitItems.forEach((item, index) => {
-    const colorClass = `fruit_${fruits[index].color.toLowerCase()}`;
-    item.className = `fruit__item ${colorClass}`;
-  });
-};
-
 shuffleButton.addEventListener('click', () => {
   shuffleFruits();
 });
@@ -74,6 +101,8 @@ const filterFruits = () => {
   fruits = fruits.filter((item) => {
     return item.weight >= minWeight && item.weight <= maxWeight;
   });
+  
+  displayFruits();
 };
 
 filterButton.addEventListener('click', () => {
@@ -174,7 +203,29 @@ addActionButton.addEventListener('click', () => {
       weight: newWeight
     };
     fruits.push(newFruit);
-    displayFruits();
+
+    const li = document.createElement('li');
+    li.classList.add('fruit__item', 'fruit_black'); // Добавляем класс fruit_black
+
+    const div = document.createElement('div');
+    div.classList.add('fruit__info');
+
+    const indexDiv = document.createElement('div');
+    indexDiv.textContent = `index: ${fruits.length - 1}`;
+    const kindDiv = document.createElement('div');
+    kindDiv.textContent = `kind: ${newKind}`;
+    const colorDiv = document.createElement('div');
+    colorDiv.textContent = `color: ${newColor}`;
+    const weightDiv = document.createElement('div');
+    weightDiv.textContent = `weight (кг): ${newWeight}`;
+
+    div.appendChild(indexDiv);
+    div.appendChild(kindDiv);
+    div.appendChild(colorDiv);
+    div.appendChild(weightDiv);
+
+    li.appendChild(div);
+    fruitsList.appendChild(li);
   } else {
     alert('Заполните все поля корректно!');
   }
